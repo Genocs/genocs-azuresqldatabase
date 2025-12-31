@@ -29,7 +29,7 @@ jobs:
         uses: azure/sql-action@v2.3
         with:
           connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
-          path: '../../GenocsSQL_Demo.sqlproj'
+          path: './GenocsSQL_Demo.sqlproj'
           action: 'publish'
           build-arguments: '-c Release'
           arguments: '/p:DropObjectsNotInSource=true'  # Optional: Customize as needed
