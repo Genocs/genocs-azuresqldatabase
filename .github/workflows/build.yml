@@ -28,7 +28,7 @@ jobs:
       - name: Build and Deploy SQL Project
         uses: azure/sql-action@v2.3
         with:
-          connection-string: ${{ secrets.AZURE_CONN_STRING }}
+          connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
           path: '../../GenocsSQL_Demo.sqlproj'
           action: 'publish'
           build-arguments: '-c Release'
