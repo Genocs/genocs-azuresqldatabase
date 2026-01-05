@@ -27,4 +27,3 @@ SELECT
     RecordedAt
 FROM dbo.OpenWeatherMap
 ORDER BY RecordedAt DESC;
-

@@ -1,3 +1,6 @@
+IF OBJECT_ID('dbo.WeatherData', 'U') IS NOT NULL
+    DROP TABLE dbo.WeatherData;
+
 CREATE TABLE WeatherData
 (
     Id INT PRIMARY KEY IDENTITY(1,1),

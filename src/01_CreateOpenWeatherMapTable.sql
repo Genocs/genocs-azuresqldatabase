@@ -32,3 +32,4 @@ CREATE TABLE dbo.OpenWeatherMap
 
 -- Create index on City and RecordedAt for common queries
 CREATE INDEX IDX_OpenWeatherMap_City_RecordedAt ON dbo.OpenWeatherMap(City, RecordedAt DESC);
+GO
