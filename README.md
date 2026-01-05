@@ -9,10 +9,65 @@ To deploy the resources in this project, you will need the following prerequisit
 - Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli).
 - Create a Service Principal for Terraform to use with the following command:
 
+```JSON
+# Sample output:
+{
+  "appId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "displayName": "GitHubActions",
+  "name": "http://GitHubActions",
+  "password": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "tenant": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+}
+ ```
+
+## Configure GitHub Actions
+
+you can use GitHub Action to automate the deployment of the Azure SQL Database using SqlDatabase Project.
+
+### 1. Create Azure Service Principal
+To allow GitHub Actions to deploy resources to your Azure subscription, you need to create a Service Principal. You can do this using the Azure CLI with the following command:
+
 ```bash
+# Create a Service Principal for GitHub Actions
 az ad sp create-for-rbac --name "GitHubActions" --role contributor --scopes /subscriptions/<your_subscription_id>/resourceGroups/<your_resource_group_name>
 ```
 
+### 2. Set up GitHub Secrets
+
+Setup the following GitHub Secrets:
+- `AZURE_SQL_CONNECTION_STRING` - The connection string for your Azure SQL Database.
+- `AZURE_CREDENTIALS` - The JSON structure containing the Service Principal details.
+
+
+In order to allow GitHub Actions to authenticate with Azure, you need to set up the necessary secrets in your GitHub repository. Follow these steps:
+
+1. Navigate to your GitHub repository.
+2. Go to `Settings` > `Secrets and variables` > `Actions`.
+3. Click on `New repository secret`.
+4. Setup the following JSON structure with the details from the Service Principal created above:
+
+```JSON    
+{
+  "clientId": <your_service_principal_appId>,
+  "clientSecret": <your_service_principal_password>,
+  "tenantId": <your_service_principal_tenant>,
+  "subscriptionId": <your_subscription_id>
+}
+```
+This JSON structure will be used to set up the GitHub secret named `AZURE_CREDENTIALS`
+
+Below are commands to verify the creation of the Service Principal:
+```bash
+# Use this command to list all service principals
+az ad sp list --display-name "GitHubActions"
+
+
+# Use this command to get information about the service principal
+az ad sp show --id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+
+TO Be confirmed:
 >
 > Replace `<your_subscription_id>` and `<your_resource_group_name>` with your actual subscription ID and resource group name.
 > - Note down the `appId`, `password`, `tenant`, and `subscriptionId` from the output of the above command. These will be used for authentication in Terraform.
