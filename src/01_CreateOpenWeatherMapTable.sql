@@ -1,7 +1,4 @@
 -- Create table to store OpenWeather API responses
-IF OBJECT_ID('dbo.OpenWeatherMap', 'U') IS NOT NULL
-    DROP TABLE dbo.OpenWeatherMap;
-
 CREATE TABLE dbo.OpenWeatherMap
 (
     WeatherID INT PRIMARY KEY IDENTITY(1,1),
@@ -29,7 +26,7 @@ CREATE TABLE dbo.OpenWeatherMap
     APIResponseCode INT,
     RecordedAt DATETIME2 DEFAULT GETDATE()
 );
+GO
 
 -- Create index on City and RecordedAt for common queries
 CREATE INDEX IDX_OpenWeatherMap_City_RecordedAt ON dbo.OpenWeatherMap(City, RecordedAt DESC);
-GO

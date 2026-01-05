@@ -1,5 +1,5 @@
 -- Create stored procedure to call OpenWeather API and store response
-CREATE OR ALTER PROCEDURE dbo.sp_GetWeatherFromAPI
+CREATE PROCEDURE dbo.sp_GetWeatherFromAPI
     @Latitude DECIMAL(10, 6) = 31,
     @Longitude DECIMAL(10, 6) = 28,
     @APIKey NVARCHAR(255),
@@ -37,8 +37,8 @@ BEGIN
         PRINT 'Raw API Response: ' + @response;
         
         -- Check if the response contains a valid city name
-        DECLARE @City NVARCHAR(100) = JSON_VALUE(@response, '$.result.name');
-        DECLARE @ApiCode INT = TRY_CAST(JSON_VALUE(@response, '$.result.cod') AS INT);
+        DECLARE @City NVARCHAR(100) = JSON_VALUE(@response, '$.name');
+        DECLARE @ApiCode INT = TRY_CAST(JSON_VALUE(@response, '$.cod') AS INT);
         
         -- Check for API errors (cod is not 200)
         IF @ApiCode IS NOT NULL AND @ApiCode != 200
@@ -82,31 +82,31 @@ BEGIN
         )
     SELECT
         @City AS City,
-        JSON_VALUE(@response, '$.result.sys.country') AS Country,
-        JSON_VALUE(@response, '$.result.coord.lat') AS Latitude,
-        JSON_VALUE(@response, '$.result.coord.lon') AS Longitude,
-        CAST(JSON_VALUE(@response, '$.result.main.temp') AS DECIMAL(5, 2)) AS Temperature,
-        CAST(JSON_VALUE(@response, '$.result.main.feels_like') AS DECIMAL(5, 2)) AS FeelsLike,
-        CAST(JSON_VALUE(@response, '$.result.main.temp_min') AS DECIMAL(5, 2)) AS TempMin,
-        CAST(JSON_VALUE(@response, '$.result.main.temp_max') AS DECIMAL(5, 2)) AS TempMax,
-        CAST(JSON_VALUE(@response, '$.result.main.pressure') AS INT) AS Pressure,
-        CAST(JSON_VALUE(@response, '$.result.main.humidity') AS INT) AS Humidity,
-        CAST(JSON_VALUE(@response, '$.result.visibility') AS INT) AS Visibility,
-        CAST(JSON_VALUE(@response, '$.result.clouds.all') AS INT) AS CloudCoverage,
-        CAST(JSON_VALUE(@response, '$.result.wind.speed') AS DECIMAL(5, 2)) AS WindSpeed,
-        CAST(JSON_VALUE(@response, '$.result.wind.deg') AS INT) AS WindDirection,
-        CAST(JSON_VALUE(@response, '$.result.wind.gust') AS DECIMAL(5, 2)) AS WindGust,
-        JSON_VALUE(@response, '$.result.weather[0].main') AS WeatherCondition,
-        JSON_VALUE(@response, '$.result.weather[0].description') AS WeatherDescription,
-        JSON_VALUE(@response, '$.result.weather[0].icon') AS WeatherIcon,
-        CAST(JSON_VALUE(@response, '$.result.sys.sunrise') AS BIGINT) AS Sunrise,
-        CAST(JSON_VALUE(@response, '$.result.sys.sunset') AS BIGINT) AS Sunset,
-        CAST(JSON_VALUE(@response, '$.result.timezone') AS INT) AS Timezone,
-        CAST(JSON_VALUE(@response, '$.result.cod') AS INT) AS APIResponseCode,
+        JSON_VALUE(@response, '$.sys.country') AS Country,
+        JSON_VALUE(@response, '$.coord.lat') AS Latitude,
+        JSON_VALUE(@response, '$.coord.lon') AS Longitude,
+        CAST(JSON_VALUE(@response, '$.main.temp') AS DECIMAL(5, 2)) AS Temperature,
+        CAST(JSON_VALUE(@response, '$.main.feels_like') AS DECIMAL(5, 2)) AS FeelsLike,
+        CAST(JSON_VALUE(@response, '$.main.temp_min') AS DECIMAL(5, 2)) AS TempMin,
+        CAST(JSON_VALUE(@response, '$.main.temp_max') AS DECIMAL(5, 2)) AS TempMax,
+        CAST(JSON_VALUE(@response, '$.main.pressure') AS INT) AS Pressure,
+        CAST(JSON_VALUE(@response, '$.main.humidity') AS INT) AS Humidity,
+        CAST(JSON_VALUE(@response, '$.visibility') AS INT) AS Visibility,
+        CAST(JSON_VALUE(@response, '$.clouds.all') AS INT) AS CloudCoverage,
+        CAST(JSON_VALUE(@response, '$.wind.speed') AS DECIMAL(5, 2)) AS WindSpeed,
+        CAST(JSON_VALUE(@response, '$.wind.deg') AS INT) AS WindDirection,
+        CAST(JSON_VALUE(@response, '$.wind.gust') AS DECIMAL(5, 2)) AS WindGust,
+        JSON_VALUE(@response, '$.weather[0].main') AS WeatherCondition,
+        JSON_VALUE(@response, '$.weather[0].description') AS WeatherDescription,
+        JSON_VALUE(@response, '$.weather[0].icon') AS WeatherIcon,
+        CAST(JSON_VALUE(@response, '$.sys.sunrise') AS BIGINT) AS Sunrise,
+        CAST(JSON_VALUE(@response, '$.sys.sunset') AS BIGINT) AS Sunset,
+        CAST(JSON_VALUE(@response, '$.timezone') AS INT) AS Timezone,
+        CAST(JSON_VALUE(@response, '$.cod') AS INT) AS APIResponseCode,
         GETDATE() AS RecordedAt;
         
         SET @ResponseMessage = 'Weather data successfully retrieved and stored. API Response Code: ' 
-                             + CAST(JSON_VALUE(@response, '$.result.cod') AS NVARCHAR(10));
+                             + CAST(JSON_VALUE(@response, '$.cod') AS NVARCHAR(10));
     END TRY
     BEGIN CATCH
         SET @ErrorMessage = ERROR_MESSAGE();

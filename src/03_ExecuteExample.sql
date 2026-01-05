@@ -1,7 +1,12 @@
 -- Example usage of the stored procedure
+-- Note: This script should be run separately outside of the SSDT project
+-- in SQL Server Management Studio or Azure Data Studio
 
+/*
 -- Declare variable to capture output message
 DECLARE @Message NVARCHAR(MAX);
+
+-- READ API key from the .env file
 
 -- Execute the stored procedure with parameters
 EXEC dbo.sp_GetWeatherFromAPI
@@ -27,3 +32,4 @@ SELECT
     RecordedAt
 FROM dbo.OpenWeatherMap
 ORDER BY RecordedAt DESC;
+*/

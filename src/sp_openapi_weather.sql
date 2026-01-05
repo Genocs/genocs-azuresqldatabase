@@ -1,3 +1,4 @@
+/*
 DECLARE @response NVARCHAR(MAX);
 DECLARE @apiKey NVARCHAR(256);
 DECLARE @url NVARCHAR(MAX);
@@ -15,6 +16,8 @@ EXEC sp_invoke_external_rest_endpoint
     @url = @url,
     @response = @response OUTPUT;
 
+GO
+*/
 /**
     * 
     {
@@ -65,7 +68,7 @@ INSERT INTO dbo.OpenWeatherMap (City, Temperature, WeatherCondition, RecordedAt)
     */
 
 
-
+/*
 
 INSERT INTO OpenWeatherMap (City, Temperature, Condition, Timestamp)
 SELECT 
@@ -73,3 +76,5 @@ SELECT
     JSON_VALUE(@response, '$.main.temp'),
     JSON_VALUE(@response, '$.weather[0].description'),
     GETDATE();
+
+*/
